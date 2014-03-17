@@ -67,7 +67,7 @@ App.Model.Movie = Backbone.Model.extend({
 
             model.trigger('rottenloaded');
 
-            App.findYifySubtitle({
+            /*App.findYifySubtitle({
                 imdb: model.get('imdb'),
                 title: model.get('title')
             }, function (info2) {
@@ -80,13 +80,13 @@ App.Model.Movie = Backbone.Model.extend({
                 }//if
 
                 console.log("yifySubtitles: ");
-                console.log(subs);
+                console.log(subs);*/
 
                 model.set('subbtitlesLoaded', true);
                 model.set('subtitles', subs);
 
                 model.trigger('rottenloaded');
-            });
+            //});
         });
     },
 

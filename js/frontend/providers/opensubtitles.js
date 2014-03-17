@@ -77,7 +77,7 @@ App.findOpenSubtitle = function (model, cb, isFallback) {
 
         if (!token) {
             return setTimeout(function () {
-                App.findSubtitle(model, cb);
+                App.findOpenSubtitle(model, cb);
             }, 200);
         }
 
@@ -118,7 +118,7 @@ App.findOpenSubtitle = function (model, cb, isFallback) {
 
         client.methodCall('SearchSubtitles', params, function (error, data) {
             if (!error && data && !isFallback && data.data === false) {
-                return App.findSubtitle(model, cb, true);
+                return App.findOpenSubtitle(model, cb, true);
             }
 
             if (!error && data.data && data.data.length) {
@@ -130,7 +130,14 @@ App.findOpenSubtitle = function (model, cb, isFallback) {
                     //console.log(supportedLanguages[sub.SubLanguageID]);
 
                     if (typeof subs[supportedLanguages[sub.SubLanguageID]] === 'undefined' && typeof supportedLanguages[sub.SubLanguageID] != 'undefined') {
-                        subs[supportedLanguages[sub.SubLanguageID]] = sub.SubDownloadLink;
+                        // Create a unique file to cache the video (with a microtimestamp) to prevent read conflicts
+                        var tmpFilename = model.title.toLowerCase();
+                        tmpFilename = tmpFilename.replace(/([^a-zA-Z0-9-_])/g, '_') + '_' + sub.SubLanguageID + '.srt';
+                        var tmpFile = path.join(tmpFolder, tmpFilename);
+
+                        App.unzip(sub.SubDownloadLink, tmpFile);
+
+                        subs[supportedLanguages[sub.SubLanguageID]] = tmpFile;
                     }
                 });
 

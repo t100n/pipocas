@@ -104,6 +104,8 @@ window.SubtitleLanguages = {
 
 window.spawnVideoPlayer = function (url, subs, movieModel) {
 
+    console.log("spawnVideoPlayer:");
+
     // Sort sub according lang translation
     var subArray = [];
     for (var lang in subs) {
@@ -113,6 +115,8 @@ window.spawnVideoPlayer = function (url, subs, movieModel) {
             'languageName': SubtitleLanguages[lang],
             'sub': subs[lang]
         });
+
+        console.log(subs[lang]);
     }
     subArray.sort(function (sub1, sub2) {
         return sub1.language > sub2.language;
@@ -181,6 +185,8 @@ window.spawnVideoPlayer = function (url, subs, movieModel) {
     tracks = video.textTracks();
     for( var i in tracks ) {
       tracks[i].on('loaded', function(){
+        console.log("track loaded: "+i);
+
         // Trigger a resize to get the subtitles position right
         $(window).trigger('resize');
         //userTracking.event('Video Subtitles', 'Select '+ this.language_, movieModel.get('niceTitle') ).send();
