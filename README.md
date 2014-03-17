@@ -1,4 +1,77 @@
-pipocas
-=======
+## Idea
 
-A melhor maneira para comer pipocas é a ver um filme!
+The best way to eat popcorn is while watching a movie!
+
+### Status
+
+Under development (RC1) for Mac OSX - Windows - Linux.
+ 
+### APIs
+
+**Currently used:**
+- [YIFY](http://yts.re/api) movie torrents API.
+- [YIFY Subtitles](http://www.yifysubtitles.com/) movie subtitles
+- [OpenSubtitles](http://trac.opensubtitles.org/projects/opensubtitles/wiki/XMLRPC) for subtitles
+- [TheMovieDB](http://www.themoviedb.org/) for movies metadata.
+
+
+## Building
+
+### Dependencies
+
+You will need nodejs and grunt:
+
+    $ npm install -g grunt-cli
+
+### Select your OS
+
+Enable your Operating System in `Gruntfile.js` and disable all the others:
+
+    …
+    nodewebkit: {
+      options: {
+        …
+        mac: false,
+        win: false,
+        linux32: false,
+        linux64: true
+      },
+    …
+
+### Build
+
+Install the node modules:
+
+    $ npm install
+
+Built with:
+
+    $ grunt nodewkbuild
+
+
+## Any problem?
+
+### Regarding superagent dependency
+Due to [wrong browser verification](https://github.com/visionmedia/superagent/issues/95) on a dependency, this hard fix must be applied.
+Replace `node_modules/moviedb/node_modules/superagent/index.js` contents with:
+```javascript
+// if (typeof window != 'undefined') {
+//   module.exports = require('./lib/superagent');
+// } else if (process.env.SUPERAGENT_COV) {
+//   module.exports = require('./lib-cov/node');
+// } else {
+  module.exports = require('./lib/node');
+// }
+```
+
+### Regarding Video, MP4 H264 Playback
+- Info: https://github.com/rogerwang/node-webkit/wiki/Support-mp3-and-h264-in-video-and-audio-tag
+- Needed to build a custom build of node-webkit that adds h264 support (or you can download ready-to-go builds from https://file.ac/s4Lt3Vo6rls/)
+- Alternatively, we can replace a .so and .dll file from the correspondent Chrome build to node-webkit and node-webkit.exe
+
+
+## Development
+- Run `compass watch` in Terminal for CSS compiling and listen to future changes.
+- [How to build with SublimeText](https://github.com/rogerwang/node-webkit/wiki/Debugging-with-Sublime-Text-2-and-3)
+- Currently Gaze to watch all files and reload the app is disabled due to memory leaks and unstability.
+- Run node-webkit from the root directory with --debug to enable debugging mode like so ```node-webkit . --debug```
